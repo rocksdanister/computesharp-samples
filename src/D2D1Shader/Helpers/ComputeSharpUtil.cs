@@ -27,7 +27,7 @@ public static class ComputeSharpUtil
         return device.AllocateReadOnlyTexture2D<Rgba32CS, float4>(1, 1);
     }
 
-    public static CanvasBitmap CreateCanvasBitmapOrPlaceholder(ICanvasResourceCreator resource, string filePath)
+    public static CanvasBitmap CreateCanvasBitmapOrPlaceholder(ICanvasAnimatedControl canvas, string filePath)
     {
         using var image = !string.IsNullOrEmpty(filePath) ? Image.Load<Rgba32IS>(filePath) : new Image<Rgba32IS>(1, 1);
 
@@ -37,12 +37,12 @@ public static class ComputeSharpUtil
         byte[] pixelData = new byte[width * height * 4];
 
         // Ref: https://learn.microsoft.com/en-us/windows/apps/develop/win2d/pixel-formats
-        if (resource.Device.IsPixelFormatSupported(DirectXPixelFormat.R8G8B8A8UIntNormalized))
+        if (canvas.Device.IsPixelFormatSupported(DirectXPixelFormat.R8G8B8A8UIntNormalized))
         {
             image.CopyPixelDataTo(pixelData);
 
             bitmap = CanvasBitmap.CreateFromBytes(
-                resource,
+                canvas,
                 pixelData,
                 width,
                 height,
@@ -70,7 +70,7 @@ public static class ComputeSharpUtil
             });
 
             bitmap = CanvasBitmap.CreateFromBytes(
-                resource,
+                canvas,
                 pixelData,
                 width,
                 height,
